@@ -4,13 +4,14 @@ import sqlite3
 from flask import Flask, jsonify
 import os
 
+from flask import g
 from flask import render_template
 from flask import request
 
 app = Flask(__name__)
 
 mydir = os.path.dirname(os.path.realpath(__file__))
-dbfile = os.path.join(mydir, "tomtimer")
+DATABASE = os.path.join(mydir, "tomtimer")
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
@@ -47,7 +48,8 @@ def hello_world():
     names = [description[0] for description in c.description]
     return render_template('results.html', results=result, names=names)
 
-get_db().cursor().execute('CREATE TABLE IF NOT EXISTS tomtimes(id INTEGER PRIMARY KEY, hostname varchar(25), ip varchar(25), clienttime varchar(25), hosttime varchar(25)')
+with app.app_context():
+    get_db().cursor().execute('CREATE TABLE IF NOT EXISTS tomtimes(id INTEGER PRIMARY KEY, hostname varchar(25), ip varchar(25), clienttime varchar(25), hosttime varchar(25))')
 
 if __name__ == '__main__':
     app.run()
