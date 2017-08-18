@@ -35,7 +35,7 @@ def save_time(hostname, timestring):
         query = "INSERT INTO tomtimes (hostname, ip, clienttime, hosttime) VALUES (?,?,?,?)"
         c = get_db(DATABASE).cursor()
         c.execute(query, (hostname, request.remote_addr, date, now))
-        get_db().commit()
+        get_db(DATABASE).commit()
         return jsonify({"result":"ok"})
     except Exception as e:
         return jsonify({"result": "nok", "error": e.message})
