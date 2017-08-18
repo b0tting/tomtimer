@@ -1,0 +1,24 @@
+<!doctype html>
+<title>Results!</title>
+<div class=page>
+  <h1>RESULTS</h1>
+  <div class=metanav>
+  </div>
+<table>
+<thead>
+    {% for name in names %}
+        <th>{{ name }}</th>
+    {% endfor %}
+</thead>
+<tbody>
+    {% for result in results %}
+        <tr>
+        {% for field in result %}
+            <td>{{  field  }}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+</div>
