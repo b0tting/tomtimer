@@ -32,9 +32,9 @@ def save_time(hostname, timestring):
     try:
         date  = datetime.datetime.strptime(timestring, "%Y-%m-%d-%H-%M-%S")
         now = datetime.datetime.now()
-        query = "INSERT INTO tomtimes (hostname, ip, clienttime, hosttime) VALUES (?,?,?,?)"
+        query = 'INSERT INTO tijdregistratie (hostnaam, systeemtijd_client, systeemtijd_server, ip_nummer) VALUES (?,?,?,?)'
         c = get_db(DATABASE).cursor()
-        c.execute(query, (hostname, request.remote_addr, date, now))
+        c.execute(query, (hostname, date, now, request.remote_addr))
         get_db(DATABASE).commit()
         return jsonify({"result":"ok"})
     except Exception as e:
@@ -43,13 +43,13 @@ def save_time(hostname, timestring):
 @app.route('/')
 def hello_world():
     c = get_db(DATABASE).cursor()
-    select  = c.execute("SELECT * FROM tomtimes")
+    select  = c.execute("SELECT * FROM tijdregistratie")
     result = select.fetchall()
     names = [description[0] for description in c.description]
     return render_template('results.html', results=result, names=names)
 
 with app.app_context():
-    get_db(DATABASE).cursor().execute('CREATE TABLE IF NOT EXISTS tomtimes(id INTEGER PRIMARY KEY, hostname varchar(25), ip varchar(25), clienttime varchar(25), hosttime varchar(25))')
+    get_db(DATABASE).cursor().execute('CREATE TABLE tijdregistratie (hostnaam varchar2(20),systeemtijd_client varchar2(20), systeemtijd_server varchar2(20), ip_nummer varchar2(20))');
 
 if __name__ == '__main__':
     app.run()
